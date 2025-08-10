@@ -57,7 +57,7 @@ const Navigation: React.FC = () => {
               fontWeight: 600,
             }}
           >
-            Form Builder
+            Upliance Assignment
           </Typography>
           <IconButton
             color="inherit"
@@ -134,7 +134,7 @@ const Navigation: React.FC = () => {
             letterSpacing: '-0.5px',
           }}
         >
-          Dynamic Form Builder
+          Upliance Assignment
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           {navigationItems.map((item) => (

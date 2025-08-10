@@ -609,12 +609,6 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema, onSubmit }) => {
                                 sx={{ height: 20, fontSize: '0.7rem' }}
                               />
                             )}
-                            <Chip
-                              label={field.type}
-                              size="small"
-                              variant="outlined"
-                              sx={{ height: 20, fontSize: '0.7rem' }}
-                            />
                           </Typography>
                           <Typography
                             variant="body1"
@@ -682,26 +676,7 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema, onSubmit }) => {
             </FeedbackButton>
           </Stack>
 
-          {/* Additional Info */}
-          <Box
-            sx={{
-              mt: 4,
-              p: 2,
-              backgroundColor: alpha(theme.palette.info.main, 0.05),
-              borderRadius: 2,
-              border: '1px solid',
-              borderColor: alpha(theme.palette.info.main, 0.2),
-            }}
-          >
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ textAlign: 'center' }}
-            >
-              This is a preview submission. In a real application, this data would be saved to a database 
-              and processed according to your requirements.
-            </Typography>
-          </Box>
+
         </Paper>
       </ResponsiveLayout>
     );

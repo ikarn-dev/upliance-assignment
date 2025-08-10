@@ -170,7 +170,7 @@ const FormBuilder: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { showSuccess, showError } = useNotification();
   const { withLoading } = useLoading();
-  
+
   const [formSchema, setFormSchema] = useState<FormSchema>({
     id: `form-${Date.now()}`,
     name: '',
@@ -182,7 +182,7 @@ const FormBuilder: React.FC = () => {
   const [editingField, setEditingField] = useState<FormField | undefined>();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [fieldToDelete, setFieldToDelete] = useState<FormField | null>(null);
-  
+
   // Save form state
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [formName, setFormName] = useState('');
@@ -284,7 +284,7 @@ const FormBuilder: React.FC = () => {
       showError('Cannot save an empty form. Please add at least one field.');
       return;
     }
-    
+
     setFormName(formSchema.name || '');
     setFormNameError('');
     setSaveDialogOpen(true);
@@ -299,7 +299,7 @@ const FormBuilder: React.FC = () => {
   const handleFormNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setFormName(value);
-    
+
     // Clear error when user starts typing
     if (formNameError && value.trim()) {
       setFormNameError('');
@@ -308,18 +308,18 @@ const FormBuilder: React.FC = () => {
 
   const handleConfirmSave = async () => {
     const trimmedName = formName.trim();
-    
+
     // Validate form name
     if (!trimmedName) {
       setFormNameError('Form name is required');
       return;
     }
-    
+
     if (trimmedName.length < 2) {
       setFormNameError('Form name must be at least 2 characters long');
       return;
     }
-    
+
     if (trimmedName.length > 100) {
       setFormNameError('Form name must be less than 100 characters');
       return;
@@ -329,29 +329,29 @@ const FormBuilder: React.FC = () => {
       await withLoading(async () => {
         // Add a small delay for better UX
         await new Promise(resolve => setTimeout(resolve, 800));
-        
+
         const schemaToSave: FormSchema = {
           ...formSchema,
           name: trimmedName,
           createdAt: new Date(),
         };
-        
+
         LocalStorageService.saveForm(schemaToSave);
-        
+
         // Update the current form schema with the saved name
         setFormSchema(schemaToSave);
-        
+
         // Close dialog first for better UX
         setSaveDialogOpen(false);
         setFormName('');
         setFormNameError('');
-        
+
         // Show success message after dialog closes
         setTimeout(() => {
           showSuccess(`Form "${trimmedName}" saved successfully!`);
         }, 100);
       }, `Saving "${trimmedName}"...`);
-      
+
     } catch (error) {
       console.error('Error saving form:', error);
       const errorMessage = ErrorHandler.getDetailedMessage(error);
@@ -362,10 +362,10 @@ const FormBuilder: React.FC = () => {
   return (
     <ResponsiveLayout maxWidth="xl" fullHeight>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          sx={{ 
+        <Typography
+          variant="h4"
+          component="h1"
+          sx={{
             fontWeight: 600,
             fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' },
             color: 'text.primary',
@@ -373,7 +373,7 @@ const FormBuilder: React.FC = () => {
         >
           Form Builder
         </Typography>
-        
+
         {/* Mobile action buttons */}
         {isMobile && (
           <Stack direction="row" spacing={1}>
@@ -411,9 +411,9 @@ const FormBuilder: React.FC = () => {
         )}
       </Box>
 
-      <Box 
-        sx={{ 
-          display: 'flex', 
+      <Box
+        sx={{
+          display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           gap: { xs: 3, md: 4 },
           flex: 1,
@@ -421,24 +421,24 @@ const FormBuilder: React.FC = () => {
       >
         {/* Left Panel - Form Fields List */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center', 
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 2,
             flexWrap: 'wrap',
             gap: 2,
           }}>
-            <Typography 
-              variant="h6" 
-              sx={{ 
+            <Typography
+              variant="h6"
+              sx={{
                 fontWeight: 600,
                 color: 'text.primary',
               }}
             >
               Form Fields
             </Typography>
-            
+
             {/* Desktop action buttons */}
             {!isMobile && (
               <Stack direction="row" spacing={1}>
@@ -471,9 +471,9 @@ const FormBuilder: React.FC = () => {
           </Box>
 
           {formSchema.fields.length === 0 ? (
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
+              sx={{
                 p: 4,
                 textAlign: 'center',
                 border: '2px dashed',
@@ -521,8 +521,8 @@ const FormBuilder: React.FC = () => {
         </Box>
 
         {/* Right Panel - Field Editor */}
-        <Box sx={{ 
-          flex: 1, 
+        <Box sx={{
+          flex: 1,
           minWidth: 0,
           display: isEditing ? 'block' : { xs: 'none', md: 'block' },
         }}>
@@ -534,9 +534,9 @@ const FormBuilder: React.FC = () => {
               availableFields={formSchema.fields}
             />
           ) : (
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
+              sx={{
                 p: 4,
                 textAlign: 'center',
                 border: '1px solid',
@@ -618,8 +618,8 @@ const FormBuilder: React.FC = () => {
           <Button onClick={handleSaveDialogClose}>
             Cancel
           </Button>
-          <FeedbackButton 
-            onClick={handleConfirmSave} 
+          <FeedbackButton
+            onClick={handleConfirmSave}
             variant="contained"
             disabled={!formName.trim()}
             startIcon={<SaveIcon />}
