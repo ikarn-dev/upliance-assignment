@@ -1,9 +1,13 @@
-# Upliance Assignment - Dynamic Form Builder
+# Upliance Assignment - Form Builder
 
 A powerful, intuitive dynamic form builder application built with React, TypeScript, and Material-UI. Create, customize, and manage forms with advanced validation, drag-and-drop functionality, and real-time preview capabilities.
 
 
 **DEMO**
+## video
+
+
+https://github.com/user-attachments/assets/3e4bfa13-c5e7-4e89-a0c9-64e05eace79c
 
 <img width="1917" height="858" alt="1" src="https://github.com/user-attachments/assets/16f39a59-d0eb-4c1a-859f-bff8b4a7db30" />
 <img width="1919" height="860" alt="2" src="https://github.com/user-attachments/assets/8a8bd20e-2d78-4abe-850b-9c11bc70a77c" />
