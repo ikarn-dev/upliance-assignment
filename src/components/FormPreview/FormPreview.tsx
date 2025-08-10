@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Typography,
   Paper,
@@ -38,6 +39,7 @@ interface FormPreviewProps {
 
 const FormPreviewEmptyState: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [recentForms, setRecentForms] = useState<FormSchema[]>([]);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ const FormPreviewEmptyState: React.FC = () => {
   };
 
   const handlePreviewForm = (formId: string) => {
-    window.location.href = `/preview/${formId}`;
+    navigate(`/preview/${formId}`);
   };
 
   return (
@@ -211,7 +213,7 @@ const FormPreviewEmptyState: React.FC = () => {
 
             <Button
               variant="outlined"
-              href="/myforms"
+              onClick={() => navigate('/myforms')}
               sx={{
                 mt: 2,
                 minWidth: 160,
@@ -234,7 +236,7 @@ const FormPreviewEmptyState: React.FC = () => {
             color="primary"
             size="large"
             startIcon={<Add />}
-            href="/create"
+            onClick={() => navigate('/create')}
             sx={{
               minWidth: { xs: '100%', sm: 'auto' },
               py: 1.5,
@@ -249,7 +251,7 @@ const FormPreviewEmptyState: React.FC = () => {
               color="secondary"
               size="large"
               startIcon={<Description />}
-              href="/myforms"
+              onClick={() => navigate('/myforms')}
               sx={{
                 minWidth: { xs: '100%', sm: 'auto' },
                 py: 1.5,

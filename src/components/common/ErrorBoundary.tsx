@@ -76,6 +76,8 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
+    // For error boundary, we'll use window.location.reload to ensure a clean state
+    // since React Router might be in a broken state
     window.location.href = '/';
   };
 

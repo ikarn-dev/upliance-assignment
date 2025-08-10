@@ -304,7 +304,7 @@ const FormManager: React.FC = () => {
           </Typography>
           <Button
             variant="contained"
-            href="/create"
+            onClick={() => navigate('/create')}
             size="large"
             startIcon={<Add />}
             sx={{ mt: 2 }}
@@ -391,7 +391,7 @@ const FormManager: React.FC = () => {
                   <Button
                     variant="contained"
                     startIcon={<Add />}
-                    href="/create"
+                    onClick={() => navigate('/create')}
                     sx={{ minWidth: 140 }}
                   >
                     New Form
@@ -575,7 +575,7 @@ const FormManager: React.FC = () => {
         >
           <Button
             variant="contained"
-            href="/create"
+            onClick={() => navigate('/create')}
             sx={{
               borderRadius: '50%',
               minWidth: 56,
