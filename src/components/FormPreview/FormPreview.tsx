@@ -301,7 +301,9 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema, onSubmit }) => {
           // Set appropriate default values based on field type
           switch (field.type) {
             case 'checkbox':
-              initialValues[field.id] = false;
+              // For checkbox groups (with options), initialize as empty array
+              // For single checkbox, initialize as false
+              initialValues[field.id] = field.options && field.options.length > 0 ? [] : false;
               break;
             case 'number':
               initialValues[field.id] = '';
@@ -432,7 +434,9 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema, onSubmit }) => {
         // Set appropriate default values based on field type
         switch (field.type) {
           case 'checkbox':
-            initialValues[field.id] = false;
+            // For checkbox groups (with options), initialize as empty array
+            // For single checkbox, initialize as false
+            initialValues[field.id] = field.options && field.options.length > 0 ? [] : false;
             break;
           case 'number':
             initialValues[field.id] = '';
@@ -487,7 +491,18 @@ const FormPreview: React.FC<FormPreviewProps> = ({ schema, onSubmit }) => {
     
     switch (field.type) {
       case 'checkbox':
-        return value ? 'Yes' : 'No';
+        // Handle checkbox groups (multiple options) vs single checkbox
+        if (field.options && field.options.length > 0) {
+          // Checkbox group - show selected options
+          if (Array.isArray(value) && value.length > 0) {
+            return value.join(', ');
+          } else {
+            return 'None selected';
+          }
+        } else {
+          // Single checkbox - show Yes/No
+          return value ? 'Yes' : 'No';
+        }
       case 'select':
       case 'radio':
         return String(value);

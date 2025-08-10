@@ -573,92 +573,122 @@ const DynamicField: React.FC<DynamicFieldProps> = ({
       );
 
     case 'checkbox':
-      return (
-        <Stack spacing={1} data-field-id={field.id}>
-          <Box
-            margin="normal"
-            sx={{
-              p: 2,
-              border: '1px solid',
-              borderColor: hasError
-                ? theme.palette.error.main
-                : isFieldDisabled && field.derivedFrom
-                  ? theme.palette.info.main
-                  : 'divider',
-              borderRadius: 2,
-              borderStyle: isFieldDisabled && field.derivedFrom ? 'dashed' : 'solid',
-              backgroundColor: hasError
-                ? alpha(theme.palette.error.main, 0.02)
-                : isValid
-                  ? alpha(theme.palette.success.main, 0.02)
+      // Handle checkbox groups (multiple options) vs single checkbox
+      if (field.options && field.options.length > 0) {
+        // Checkbox group - multiple checkboxes with options
+        const selectedValues = Array.isArray(value) ? value : [];
+        
+        const handleCheckboxGroupChange = (option: string, checked: boolean) => {
+          let newValues;
+          if (checked) {
+            newValues = [...selectedValues, option];
+          } else {
+            newValues = selectedValues.filter((v: string) => v !== option);
+          }
+          handleChange(newValues);
+        };
+
+        return (
+          <Stack spacing={1} data-field-id={field.id}>
+            <FormControl
+              component="fieldset"
+              margin="normal"
+              error={hasError}
+              disabled={isFieldDisabled}
+              sx={{
+                p: 2,
+                border: '1px solid',
+                borderColor: hasError
+                  ? theme.palette.error.main
                   : isFieldDisabled && field.derivedFrom
-                    ? alpha(theme.palette.info.main, 0.05)
-                    : 'transparent',
-              transition: 'all 0.2s ease-in-out',
-            }}
-          >
-            <FormControl error={hasError} disabled={isFieldDisabled}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={Boolean(value)}
-                    onChange={(e) => handleChange(e.target.checked)}
-                    onBlur={handleBlur}
-                    sx={{
-                      color: hasError
-                        ? 'error.main'
-                        : isValid
-                          ? 'success.main'
-                          : 'primary.main',
-                    }}
-                  />
-                }
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    {field.label}
-                    {field.derivedFrom && (
-                      <Tooltip title="This field is automatically calculated">
-                        <AutoAwesome
-                          sx={{
-                            color: theme.palette.info.main,
-                            fontSize: 16,
-                          }}
-                        />
-                      </Tooltip>
-                    )}
-                    {hasError && (
-                      <Tooltip title={error!.join('; ')}>
-                        <ErrorOutline
-                          sx={{
-                            color: theme.palette.error.main,
-                            fontSize: 16,
-                          }}
-                        />
-                      </Tooltip>
-                    )}
-                    {isValid && (
-                      <CheckCircle
-                        sx={{
-                          color: theme.palette.success.main,
-                          fontSize: 16,
-                        }}
-                      />
-                    )}
-                  </Box>
-                }
+                    ? theme.palette.info.main
+                    : 'divider',
+                borderRadius: 2,
+                borderStyle: isFieldDisabled && field.derivedFrom ? 'dashed' : 'solid',
+                backgroundColor: hasError
+                  ? alpha(theme.palette.error.main, 0.02)
+                  : isValid
+                    ? alpha(theme.palette.success.main, 0.02)
+                    : isFieldDisabled && field.derivedFrom
+                      ? alpha(theme.palette.info.main, 0.05)
+                      : 'transparent',
+                transition: 'all 0.2s ease-in-out',
+              }}
+            >
+              <FormLabel
+                component="legend"
                 required={field.required}
                 sx={{
-                  '& .MuiFormControlLabel-label': {
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                  },
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  mb: 1,
+                  fontWeight: 500,
+                  color: hasError ? 'error.main' : 'text.primary',
                 }}
-              />
+              >
+                {field.label}
+                {field.derivedFrom && (
+                  <Tooltip title="This field is automatically calculated">
+                    <AutoAwesome
+                      sx={{
+                        color: theme.palette.info.main,
+                        fontSize: 16,
+                      }}
+                    />
+                  </Tooltip>
+                )}
+                {hasError && (
+                  <Tooltip title={error!.join('; ')}>
+                    <ErrorOutline
+                      sx={{
+                        color: theme.palette.error.main,
+                        fontSize: 16,
+                      }}
+                    />
+                  </Tooltip>
+                )}
+                {isValid && (
+                  <CheckCircle
+                    sx={{
+                      color: theme.palette.success.main,
+                      fontSize: 16,
+                    }}
+                  />
+                )}
+              </FormLabel>
+              <Box>
+                {field.options.map((option) => (
+                  <FormControlLabel
+                    key={option}
+                    control={
+                      <Checkbox
+                        checked={selectedValues.includes(option)}
+                        onChange={(e) => handleCheckboxGroupChange(option, e.target.checked)}
+                        onBlur={handleBlur}
+                        sx={{
+                          color: hasError
+                            ? 'error.main'
+                            : isValid
+                              ? 'success.main'
+                              : 'primary.main',
+                        }}
+                      />
+                    }
+                    label={option}
+                    sx={{
+                      display: 'block',
+                      '& .MuiFormControlLabel-label': {
+                        fontSize: '0.875rem',
+                      },
+                    }}
+                  />
+                ))}
+              </Box>
               {validationInfo.helperText && (
                 <FormHelperText
                   sx={{
                     mt: 1,
-                    ml: 4,
                     fontSize: '0.75rem',
                     lineHeight: 1.4,
                   }}
@@ -667,17 +697,124 @@ const DynamicField: React.FC<DynamicFieldProps> = ({
                 </FormHelperText>
               )}
             </FormControl>
-          </Box>
-          {validationInfo.showValidationHint && validationInfo.validationHints.map((hint, index) => (
-            <ValidationHint
-              key={index}
-              message={hint.message}
-              suggestion={hint.suggestion}
-              severity={hint.severity}
-            />
-          ))}
-        </Stack>
-      );
+            {validationInfo.showValidationHint && validationInfo.validationHints.map((hint, index) => (
+              <ValidationHint
+                key={index}
+                message={hint.message}
+                suggestion={hint.suggestion}
+                severity={hint.severity}
+              />
+            ))}
+          </Stack>
+        );
+      } else {
+        // Single checkbox - boolean value
+        return (
+          <Stack spacing={1} data-field-id={field.id}>
+            <Box
+              margin="normal"
+              sx={{
+                p: 2,
+                border: '1px solid',
+                borderColor: hasError
+                  ? theme.palette.error.main
+                  : isFieldDisabled && field.derivedFrom
+                    ? theme.palette.info.main
+                    : 'divider',
+                borderRadius: 2,
+                borderStyle: isFieldDisabled && field.derivedFrom ? 'dashed' : 'solid',
+                backgroundColor: hasError
+                  ? alpha(theme.palette.error.main, 0.02)
+                  : isValid
+                    ? alpha(theme.palette.success.main, 0.02)
+                    : isFieldDisabled && field.derivedFrom
+                      ? alpha(theme.palette.info.main, 0.05)
+                      : 'transparent',
+                transition: 'all 0.2s ease-in-out',
+              }}
+            >
+              <FormControl error={hasError} disabled={isFieldDisabled}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={Boolean(value)}
+                      onChange={(e) => handleChange(e.target.checked)}
+                      onBlur={handleBlur}
+                      sx={{
+                        color: hasError
+                          ? 'error.main'
+                          : isValid
+                            ? 'success.main'
+                            : 'primary.main',
+                      }}
+                    />
+                  }
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {field.label}
+                      {field.derivedFrom && (
+                        <Tooltip title="This field is automatically calculated">
+                          <AutoAwesome
+                            sx={{
+                              color: theme.palette.info.main,
+                              fontSize: 16,
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                      {hasError && (
+                        <Tooltip title={error!.join('; ')}>
+                          <ErrorOutline
+                            sx={{
+                              color: theme.palette.error.main,
+                              fontSize: 16,
+                            }}
+                          />
+                        </Tooltip>
+                      )}
+                      {isValid && (
+                        <CheckCircle
+                          sx={{
+                            color: theme.palette.success.main,
+                            fontSize: 16,
+                          }}
+                        />
+                      )}
+                    </Box>
+                  }
+                  required={field.required}
+                  sx={{
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                    },
+                  }}
+                />
+                {validationInfo.helperText && (
+                  <FormHelperText
+                    sx={{
+                      mt: 1,
+                      ml: 4,
+                      fontSize: '0.75rem',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {validationInfo.helperText}
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Box>
+            {validationInfo.showValidationHint && validationInfo.validationHints.map((hint, index) => (
+              <ValidationHint
+                key={index}
+                message={hint.message}
+                suggestion={hint.suggestion}
+                severity={hint.severity}
+              />
+            ))}
+          </Stack>
+        );
+      }
 
     default:
       return (

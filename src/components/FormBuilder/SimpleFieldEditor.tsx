@@ -81,7 +81,7 @@ const SimpleFieldEditor: React.FC<SimpleFieldEditorProps> = ({ field, onSave, on
     setHasChanges(true);
   };
 
-  const needsOptions = fieldData.type === 'select' || fieldData.type === 'radio';
+  const needsOptions = fieldData.type === 'select' || fieldData.type === 'radio' || fieldData.type === 'checkbox';
 
   const handleSave = async () => {
     if (!fieldData.label.trim()) {
