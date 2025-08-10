@@ -2,6 +2,21 @@
 
 A powerful, intuitive dynamic form builder application built with React, TypeScript, and Material-UI. Create, customize, and manage forms with advanced validation, drag-and-drop functionality, and real-time preview capabilities.
 
+
+**DEMO**
+<img width="1916" height="860" alt="6" src="https://github.com/user-attachments/assets/de42f759-36ee-42cc-b5ae-30a0b22992bf" />
+<img width="1915" height="860" alt="5-2" src="https://github.com/user-attachments/assets/09ea0eb9-679d-42e0-b9ee-13e91b0b9684" />
+<img width="1905" height="863" alt="5-1" src="https://github.com/user-attachments/assets/a3c4d18f-73cf-4a67-8a8d-e4b7f3ad71e4" />
+<img width="1919" height="860" alt="4-2" src="https://github.com/user-attachments/assets/7a2f7013-869c-4dd5-a31e-b5c4599c8bd4" />
+<img width="1919" height="869" alt="4-1" src="https://github.com/user-attachments/assets/7a440312-181c-4fa9-8308-f2a3955b9647" />
+<img width="1919" height="862" alt="3" src="https://github.com/user-attachments/assets/6caa2db8-b347-4ccb-a5ee-c5a110d28487" />
+<img width="1919" height="860" alt="2" src="https://github.com/user-attachments/assets/307bb1c7-3289-42bb-b0fa-ac400cf349a3" />
+<img width="1917" height="858" alt="1" src="https://github.com/user-attachments/assets/47ca9ee2-97fe-42a8-bf47-59fce1b78ed2" />
+
+
+
+
+
 ## 🚀 Features
 
 ### Core Functionality
@@ -227,6 +242,3 @@ This project is part of the Upliance assignment and is intended for evaluation p
 
 **Performance Issues**: Check browser console for errors and ensure adequate system resources
 
-## 📞 Support
-
-For questions or issues related to this assignment, please refer to the project documentation or contact the development team.
