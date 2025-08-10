@@ -14,8 +14,10 @@ import {
   Button,
   Fade,
   Zoom,
+  Chip,
+  IconButton,
 } from '@mui/material';
-import { Save, Cancel } from '@mui/icons-material';
+import { Save, Cancel, Add, Delete } from '@mui/icons-material';
 import type { FormField } from '../../types';
 import { FeedbackButton } from '../common';
 import { useNotification } from '../../contexts';
@@ -50,6 +52,7 @@ const SimpleFieldEditor: React.FC<SimpleFieldEditorProps> = ({ field, onSave, on
     derivedFrom: field?.derivedFrom,
   }));
   const [hasChanges, setHasChanges] = useState(false);
+  const [newOption, setNewOption] = useState('');
 
   const handleFieldChange = (key: keyof FormField, value: any) => {
     setFieldData(prev => ({
@@ -59,9 +62,35 @@ const SimpleFieldEditor: React.FC<SimpleFieldEditorProps> = ({ field, onSave, on
     setHasChanges(true);
   };
 
+  const handleAddOption = () => {
+    if (newOption.trim()) {
+      setFieldData(prev => ({
+        ...prev,
+        options: [...(prev.options || []), newOption.trim()],
+      }));
+      setNewOption('');
+      setHasChanges(true);
+    }
+  };
+
+  const handleRemoveOption = (index: number) => {
+    setFieldData(prev => ({
+      ...prev,
+      options: prev.options?.filter((_, i) => i !== index) || [],
+    }));
+    setHasChanges(true);
+  };
+
+  const needsOptions = fieldData.type === 'select' || fieldData.type === 'radio';
+
   const handleSave = async () => {
     if (!fieldData.label.trim()) {
       showError('Field label is required');
+      return;
+    }
+    
+    if (needsOptions && (!fieldData.options || fieldData.options.length === 0)) {
+      showError(`At least one option is required for ${fieldData.type} fields`);
       return;
     }
     
@@ -191,6 +220,84 @@ const SimpleFieldEditor: React.FC<SimpleFieldEditorProps> = ({ field, onSave, on
               }}
             />
           </Zoom>
+
+          {/* Options for Select and Radio */}
+          {needsOptions && (
+            <Zoom in timeout={500}>
+              <Box>
+                <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
+                  Options
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                  <TextField
+                    size="small"
+                    label="Add Option"
+                    value={newOption}
+                    onChange={(e) => setNewOption(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddOption();
+                      }
+                    }}
+                    sx={{
+                      flex: 1,
+                      '& .MuiOutlinedInput-root': {
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          boxShadow: 1,
+                        },
+                        '&.Mui-focused': {
+                          boxShadow: 2,
+                        },
+                      },
+                    }}
+                  />
+                  <IconButton 
+                    onClick={handleAddOption} 
+                    color="primary"
+                    disabled={!newOption.trim()}
+                    sx={{
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.1)',
+                        boxShadow: 2,
+                      },
+                    }}
+                  >
+                    <Add />
+                  </IconButton>
+                </Box>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, minHeight: '40px' }}>
+                  {fieldData.options?.map((option, index) => (
+                    <Chip
+                      key={index}
+                      label={option}
+                      onDelete={() => handleRemoveOption(index)}
+                      deleteIcon={<Delete />}
+                      sx={{
+                        transition: 'all 0.2s ease-in-out',
+                        '&:hover': {
+                          transform: 'translateY(-1px)',
+                          boxShadow: 2,
+                        },
+                      }}
+                    />
+                  ))}
+                  {(!fieldData.options || fieldData.options.length === 0) && (
+                    <Typography variant="body2" color="text.secondary" sx={{ py: 1 }}>
+                      No options added yet. Add options above.
+                    </Typography>
+                  )}
+                </Box>
+                {needsOptions && (!fieldData.options || fieldData.options.length === 0) && (
+                  <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                    At least one option is required for {fieldData.type} fields
+                  </Typography>
+                )}
+              </Box>
+            </Zoom>
+          )}
 
           {/* Action Buttons */}
           <Fade in timeout={300}>
